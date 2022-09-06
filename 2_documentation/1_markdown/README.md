@@ -60,7 +60,7 @@ making important decisions--or committing to the decisions you have already
 made.
 
 ### Resources
-The www.markdownguide.org website is a great resource for learning Markdown.
+The [www.markdownguide.org](www.markdownguide.org) website is a great resource for learning Markdown.
 They have lots of examples, recommendations for best practices, and even 
 cheat sheets.
 
@@ -68,6 +68,7 @@ You can learn a lot more about Markdown by visiting the webpage of the
 [Markdown Project](https://daringfireball.net/projects/markdown/) itself.
 
 ### Mip Go
+
 Don't know how to find Mip Go on the web?  
 Follow [this link][mip_go] to see it on the Mip Wise website.  
 Or follow [this link][mip_way_github] for its repository on GitHub .
@@ -75,28 +76,30 @@ Or follow [this link][mip_way_github] for its repository on GitHub .
 [mip_way_github]: https://github.com/mipwise/mip_way
 [mip_go]: https://mipwise.com/mip_way
 
-
-## Images ##
+## Images
 
 ![D-Wise](dwise.png)
 
+## Lists
 
-## Lists ##
 To make an impact:
+
 1. Decide what you want
-3. Take action
-4. Notice what's working or not
-5. Change your approach until it works
+2. Take action
+3. Notice what's working or not
+4. Change your approach until it works
 
 However, it takes:
-* Clarity
-* Determination
-* Focus
-* Resilience
+
+- Clarity
+- Determination
+- Focus
+- Resilience
 
 Want to make an impact with analytics? Then you should know that there are 
 three types of analytics:
-- **Descriptive** 
+
+- **Descriptive**
 
     Understanding how the system has behaved historically
 
@@ -104,18 +107,19 @@ three types of analytics:
 
     Anticipating how the system will behave in the future
 
-- **Prescriptive:** 
+- **Prescriptive:**
 
     Recommending actions to improve the future behavior of the system
 
 And remember the grocery list from the Celery Test:
+
 - [ ] m&m's
 - [ ] Kit Kat
 - [X] Rice Milk
 - [X] Celery
 
+## Code
 
-## Code ##
 Let `f` be a function that takes three arguments, `a`, `b`, and `c`, and returns their sum:
 
     def f(a, b, c):
@@ -126,8 +130,8 @@ of course. But depending on how you define `+`, here is what you can get:
 
     purpose = f(skills, interests, passion)
 
-You can use a dictionary to save the input arguments, so you don't forget 
-what they are:
+You can use a dictionary to save the input arguments, so you don't forget what they are:
+
 ```
 input = {
     a: skills,
@@ -145,16 +149,15 @@ input = {
 
 ---------------------------------------------------------
 
-📝 **Tip:** 
-*If you find some interesting Markdown tricks that are not included above, 
-add them yourself and make a commit! Remember, once you've made your editions,
-all you need to do is to click on the green checkmark, write a commit message 
-like below, and hit **Commit**.*
+📝 **Tip:**
+_If you find some interesting Markdown tricks that are not included above add them yourself and make a commit! Remember, once you've made your editions, all you need to do is to click on the green checkmark, write a commit message like below, and hit **Commit**._
+
 ```text
 markdown: Added a subsection showing how to create tables in Markdown 
 ```
 
-------------------------------------------------------------------------------
+---------------------------------------------------------
+
 In the next section, you will see how to use Jupyter Notebooks.
  
 ### [Home][home] | [Back][back] | [Next][next] | [Help][help]
