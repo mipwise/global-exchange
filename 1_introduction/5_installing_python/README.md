@@ -9,7 +9,7 @@ After you download the latest version available in there,
 double-click o the executable to start the installation the same
 way you would do with any other software.
 
-📝 **Tip:** 
+:memo: **Tip:** 
 *If you are on Windows, you may see a checkbox giving you the option to add 
 Python to the path. If so, go ahead and check that box.*
 
