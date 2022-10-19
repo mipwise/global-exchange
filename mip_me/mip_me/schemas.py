@@ -62,3 +62,8 @@ input_schema.set_data_type(
     inclusive_min=False,
     max=float('inf'),
     inclusive_max=False)
+
+
+output_schema = PanDatFactory(
+    trades=[['from', 'to'], ['buy', 'sell']]
+)
