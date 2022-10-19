@@ -6,7 +6,7 @@ This program is being designed to support you to add more intelligence power
 into operations wherever you go.
 
 At [Mip Wise](https://www.mipwise.com/), we are driven by purpose, which is 
-the positive impact that we aim to make by leveraging our skills, interests, 
+the positive impact that we look to make by leveraging our skills, interests, 
 and passion.
 
 The Mip Go program, in particular, is a result of our intention of
@@ -18,6 +18,7 @@ In the next step, you will learn more about the Mip Go program.
 Use the links at the bottom of the page to navigate.
 
 ### [Next][next] | [Help][help]
+
 
 [next]: 1_introduction/README.md
 [help]: 0_help/README.md

@@ -1,6 +1,6 @@
 # Problem Scoping
 
-Scoping a problem means understanding the business context and precisely defining the problem to be solved. This is crucial  for planning work and setting expectations about the deliverables.
+Scoping a problem means understanding the business context and precisely defining the problem to be solved. This is crucial for planning work and setting expectations about the deliverables.
 
 Despite our simple definition, scoping a problem is a non-trivial and highly ambiguous process. It's also important to pay attention to the word “process” because scoping is never a one-time exercise.
 
@@ -49,7 +49,7 @@ Pay special attention to subjective things. For example, the client might give a
 
 ## Taking notes
 
-Make sure to take notes, either during the meeting or right after that, and try to capture as much detail as you can. Keep in mind that you will have to rehearse the problem statement to other people in the future, including to the clients themselves in subsequent meetings to show that you understand their problem.
+Make sure to take notes, either during the meeting or right after that, and try to capture as much detail as you can. Keep in mind that you will have to rehearse the problem statement to other people in the future, including the clients themselves in subsequent meetings to show that you understand their problem.
 
 Remember that even information that might not seem relevant for the present moment, might turn out to be useful in the future or for subsequent projects.
 
