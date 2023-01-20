@@ -13,7 +13,7 @@ from mip_me.schemas import input_schema, output_schema
 def get_rate(rates, c_from: str, c_to: str):
     rate = rates.loc[
             (rates['From'] == c_from) &
-            (rates['To'] == c_to), 'Rate'].iloc[0]
+            (rates['To'] == c_to), 'Exchange Rate'].iloc[0]
     return rate
 
 

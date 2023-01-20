@@ -1,4 +1,4 @@
-From,To,Rate,Fixed Fee,Fee,Total Fee
+From,To,Exchange Rate,Fixed Fee,Variable Fee,Total Fee
 BRL,BRL,1,0,0,0
 BRL,CNY,1.30038,0.002,0.007,0.009
 BRL,EUR,0.177097,0.002,0.005,0.007

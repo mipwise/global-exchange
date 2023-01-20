@@ -58,7 +58,7 @@ text = {
 # region INPUT SCHEMA
 input_schema = PanDatFactory(
     parameters=[['Name'], ['Value']],
-    rates=[['From', 'To'], ['Rate', 'Fixed Fee', 'Fee', 'Total Fee']],
+    rates=[['From', 'To'], ['Exchange Rate', 'Fixed Fee', 'Variable Fee', 'Total Fee']],
     requirements=[['Symbol'], ['Currency', 'Surplus', 'Requirements', 'Balance']],
 )
 # endregion
@@ -92,9 +92,9 @@ output_schema = PanDatFactory(
 table = 'rates'
 input_schema.set_data_type(table=table, field='From', **text)
 input_schema.set_data_type(table=table, field='To', **text)
-input_schema.set_data_type(table=table, field='Rate', **non_negative_float)
+input_schema.set_data_type(table=table, field='Exchange Rate', **non_negative_float)
 input_schema.set_data_type(table=table, field='Fixed Fee', **non_negative_float)
-input_schema.set_data_type(table=table, field='Fee', **non_negative_float)
+input_schema.set_data_type(table=table, field='Variable Fee', **non_negative_float)
 input_schema.set_data_type(table=table, field='Total Fee', **non_negative_float)
 # endregion
 
