@@ -6,74 +6,93 @@ from pathlib import Path
 import pandas as pd
 import pulp
 
-# path to data files
-req_path = Path.cwd() / 'mip_me' / 'test_mip_me' / 'data'\
-    / 'inputs' / 'requirements.csv'
+from mip_me.schemas import input_schema, output_schema
 
-rates_path = Path.cwd() / 'mip_me' / 'test_mip_me' / 'data'\
-    / 'inputs' / 'rates.csv'
-
-idxs_path = Path.cwd() / 'mip_me' / 'test_mip_me' / 'data'\
-    / 'inputs' / 'idxs.csv'
 
 # read the data
-idxs_df = pd.read_csv(idxs_path, index_col='symbol')
-reqs_df = pd.read_csv(req_path, index_col='symbol')
-rates_df = pd.read_csv(rates_path, usecols=['from', 'to', 'rate'])
-
-reqs_df['total'] = reqs_df['requirements'] - reqs_df['surplus']
-
-
-def get_rate(c_from: str, c_to: str):
-    rate = rates_df.loc[
-            (rates_df['from'] == c_from) &
-            (rates_df['to'] == c_to), 'rate'].iloc[0]
+def get_rate(rates, c_from: str, c_to: str):
+    rate = rates.loc[
+            (rates['From'] == c_from) &
+            (rates['To'] == c_to), 'Rate'].iloc[0]
     return rate
 
 
-# number of currencies
-n = len(idxs_df)
-
-# print(reqs_df.loc['EUR',['surplus','requirements']])
-I = [*idxs_df.index]
-
-keys = [(i, j) for (i, j) in [*product(I, repeat=2)] if i != j]
+def fee(rates, c_from: str, c_to: str):
+    fee = rates.loc[(rates['From'] == c_from) &
+                     (rates['To'] == c_to), 'Total Fee'].iloc[0] 
+    return fee
 
 
-# define the model
-mdl = pulp.LpProblem('GlobalEx', sense=pulp.LpMaximize)
+def get_optimization_data(dat):
+    # params = dat.parameters.copy()
+    idxs = dat.requirements['Symbol'].unique()
+    # n = len(idxs)  # numbeer of currencies
+    I = [*idxs]
+    keys = [(i, j) for (i, j) in [*product(I, repeat=2)] if i != j]
 
-# define the variable
-# x_ij = currency i to be exhanged by j
-x = pulp.LpVariable.dicts(
-    'x_',
-    indices=keys,
-    cat='Continuous',
-    lowBound=0
-    # upBound=1000
-    )
+    return keys, I
 
-# CONSTRAINTS
-# flow balance for each currency: incoming-leaving >= required - surplis
-for curr in I:
-    mdl.addConstraint(
-        pulp.lpSum(
-            x[other, curr]*get_rate(other, curr) - x[curr, other]
-            for other in I if other != curr) == reqs_df.loc[curr, 'total'],
-        name=f'flow_{curr}'
+
+def solve(dat):
+    keys, I = get_optimization_data(dat)
+    mdl = pulp.LpProblem('GlobalEx', sense=pulp.LpMinimize)
+    params = input_schema.create_full_parameters_dict(dat)
+    # define the variable
+    # x_ij = currency i to be exhanged by j
+    x = pulp.LpVariable.dicts(
+        'x_',
+        indices=keys,
+        cat='Continuous',
+        lowBound=0,
+        upBound=500,
         )
 
-total_usd = pulp.lpSum(
-    x[other, 'USD']*get_rate(other, 'USD') - x['USD', other]
-    for other in (set(I)-{'USD'})
-    )
+    # CONSTRAINTS
+    # flow balance for each currency: incoming-leaving >= required - surplus
+    for curr in (set(I) - {'USD'}):
+        mdl.addConstraint(
+            pulp.lpSum(
+                x[other, curr] * get_rate(dat.rates, other, curr) * (1 - fee(dat.rates, other, curr)) - x[curr, other] 
+                for other in I if other != curr) == dat.requirements.loc[dat.requirements['Symbol'] == curr]['Balance'].iloc[0],
+            name=f'flow_{curr}'
+            )
 
-mdl.setObjective(total_usd)
+    # Dollar constraint (if you let it be >= you can explore the market!)
+    mdl.addConstraint(
+        pulp.lpSum(
+            x[other, 'USD'] * get_rate(dat.rates, other, 'USD') * (1 - fee(dat.rates, other, 'USD')) - x['USD', other]
+            for other in I if other != 'USD') >= dat.requirements.loc[dat.requirements['Symbol'] == 'USD']['Balance'].iloc[0],
+        name='flow_USD'
+        )
 
-status = mdl.solve()
+    # we are not allowed to buy another currencies with dollars (to prevent more cycles)
+    # mdl.addConstraint(
+    #     pulp.lpSum(x['USD', other] for other in I if other != 'USD') == 0, name='zero_outflow_USD'
+    #     )
 
-print(f'{pulp.LpSolution[status]}')
+    # total_usd = pulp.lpSum(
+    #     x[other, 'USD']*get_rate(dat.rates, other, 'USD') - x['USD', other]
+    #     for other in (set(I) - {'USD'})
+    #     )
 
-if status == 1:
-    x_sol = {key: x[key].value() for key in keys if x[key].value() >= 0.0001}
-    print(x_sol)
+    total_fees = pulp.lpSum(x[i, j] * (fee(dat.rates, i, j) * get_rate(dat.rates, i, 'USD')) for i,j in keys)
+
+    mdl.setObjective(total_fees)
+
+    mdl.solve(pulp.PULP_CBC_CMD(timeLimit=params['Time Limit (s)'], gapRel=params['MIP Gap']))
+    status = pulp.LpStatus[mdl.status]
+    sln = output_schema.PanDat()
+    if status == 'Optimal':
+        x_sol = [(*key, var.value()) for key, var in x.items() if var.value() >= 0.0001]
+        sln.trades = pd.DataFrame(x_sol, columns=['From', 'To', 'Quantity'])
+        sln.kpis = pd.DataFrame({'KPI': ['Total Fee ($k)'], 'Value': [mdl.objective.value() * 1000]})
+        sln.final_position = pd.DataFrame(columns=['Symbol', 'Quantity'])
+        for symb in I:
+            new_row = pd.DataFrame({'Symbol': [symb], 'Quantity': [pulp.lpSum(x[other, symb].value() * get_rate(dat.rates, other, symb) - x[symb, other].value()
+                                                                   for other in (set(I) - {symb}))]})
+            sln.final_position = pd.concat([sln.final_position, new_row], ignore_index=True)
+    
+    else:
+        print(f'Model is not optimal. Status: {status}')
+
+    return sln

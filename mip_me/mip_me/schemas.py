@@ -1,109 +1,132 @@
+"""
+Defines the input and output schemas of the problem.
+For more details on how to implement and configure data schemas see:
+https://github.com/mipwise/mip-go/tree/main/5_develop/4_data_schema
+"""
+
 from ticdat import PanDatFactory
 
-# INPUT TABLE
+# region Aliases for datatypes in ticdat
+# Remark: use only aliases that match perfectly your needs, otherwise set datatype explicitly
+float_number = {
+    "number_allowed": True,
+    "strings_allowed": (),
+    "must_be_int": False,
+    "min": -float("inf"),
+    "inclusive_min": False,
+}
+
+non_negative_float = {
+    "number_allowed": True,
+    "strings_allowed": (),
+    "must_be_int": False,
+    "min": 0,  # min=0
+    "inclusive_min": True,
+}
+
+integer_number = {
+    "number_allowed": True,
+    "strings_allowed": (),
+    "must_be_int": True,
+    "min": -float("inf"),
+    "inclusive_min": False,
+}
+
+non_negative_integer = {
+    "number_allowed": True,
+    "strings_allowed": (),
+    "must_be_int": True,
+    "min": 0,
+    "inclusive_min": True,
+}
+
+positive_integer = {
+    "number_allowed": True,
+    "strings_allowed": (),
+    "must_be_int": True,
+    "min": 1,
+    "inclusive_min": True,
+}
+
+text = {
+    "strings_allowed": "*",
+    "number_allowed": False
+}
+# endregion
+
+
+# region INPUT SCHEMA
 input_schema = PanDatFactory(
-    parameters=[['Parameter'], ['Value']],
-    indices=[['symbol'],[]],
-    rates=[['from', 'to'], ['rates']],
-    requirements=[['symbol'], ['currency', 'surplus', 'requirements']])
-
-table='rates'
-input_schema.set_data_type(
-    table=table,
-    field='from',
-    number_allowed=False,
-    strings_allowed='*')
-
-input_schema.set_data_type(
-    table=table,
-    field='to',
-    number_allowed=False,
-    strings_allowed='*')
-
-input_schema.set_data_type(
-    table=table,
-    field='rates',
-    number_allowed=True,
-    strings_allowed=(),
-    must_be_int=False,
-    min=0,
-    inclusive_min=False,
-    max=float('inf'),
-    inclusive_max=False)
-
-# REQUIREMENTS TABLE
-table='requirements'
-input_schema.set_data_type(
-    table=table,
-    field='symbol',
-    number_allowed=False,
-    strings_allowed='*')
-
-input_schema.set_data_type(
-    table=table,
-    field='currency',
-    number_allowed=False,
-    strings_allowed='*')
-
-input_schema.set_data_type(
-    table=table,
-    field='surplus',
-    number_allowed=True,
-    strings_allowed=(),
-    must_be_int=False,
-    min=0,
-    inclusive_min=False,
-    max=float('inf'),
-    inclusive_max=False)
-
-input_schema.set_data_type(
-    table=table,
-    field='requirements',
-    number_allowed=True,
-    strings_allowed=(),
-    must_be_int=False,
-    min=0,
-    inclusive_min=False,
-    max=float('inf'),
-    inclusive_max=False)
-
-# OUTPUT TABLE
-output_schema = PanDatFactory(
-    trades=[['from', 'to'], ['buy', 'sell']]
+    parameters=[['Name'], ['Value']],
+    rates=[['From', 'To'], ['Rate', 'Fixed Fee', 'Fee', 'Total Fee']],
+    requirements=[['Symbol'], ['Currency', 'Surplus', 'Requirements', 'Balance']],
 )
+# endregion
 
-# TRADES TABLE
-table='trades'
-output_schema.set_data_type(
-    table=table,
-    field='from',
-    number_allowed=False,
-    strings_allowed='*')
-
-output_schema.set_data_type(
-    table=table,
-    field='to',
-    number_allowed=False,
-    strings_allowed='*')
-
-output_schema.set_data_type(
-    table=table,
-    field='buy',
+# region USER PARAMETERS
+input_schema.add_parameter(name="Time Limit (s)", default_value=30, **non_negative_float)
+input_schema.add_parameter(
+    name="MIP Gap",
+    default_value=0.001,
     number_allowed=True,
-    strings_allowed=(),
     must_be_int=False,
     min=0,
-    inclusive_min=True,
-    max=float('inf'),
-    inclusive_max=False)
+    inclusive_min=False,
+    max=1,
+    inclusive_max=False,
+    strings_allowed=()
+)
+# input_schema.add_parameter(name="Exchange Fee", default_value=0.01, **non_negative_float)
+# endregion
 
-output_schema.set_data_type(
-    table=table,
-    field='sell',
-    number_allowed=True,
-    strings_allowed=(),
-    must_be_int=False,
-    min=0,
-    inclusive_min=True,
-    max=float('inf'),
-    inclusive_max=False)
+# region OUTPUT SCHEMA
+output_schema = PanDatFactory(
+    trades=[['From', 'To'], ['Quantity']],
+    final_position=[['Symbol'], ['Quantity']],
+    kpis=[['KPI'], ['Value']] 
+)
+# endregion
+
+# region DATA TYPES AND PREDICATES - INPUT SCHEMA
+# region rates
+table = 'rates'
+input_schema.set_data_type(table=table, field='From', **text)
+input_schema.set_data_type(table=table, field='To', **text)
+input_schema.set_data_type(table=table, field='Rate', **non_negative_float)
+input_schema.set_data_type(table=table, field='Fixed Fee', **non_negative_float)
+input_schema.set_data_type(table=table, field='Fee', **non_negative_float)
+input_schema.set_data_type(table=table, field='Total Fee', **non_negative_float)
+# endregion
+
+# region requirements
+table = 'requirements'
+input_schema.set_data_type(table=table, field='Symbol', **text)
+input_schema.set_data_type(table=table, field='Currency', **text)
+input_schema.set_data_type(table=table, field='Surplus', **non_negative_float)
+input_schema.set_data_type(table=table, field='Requirements', **non_negative_float)
+input_schema.set_data_type(table=table, field='Balance', **float_number)
+# endregion
+
+# endregion
+
+# region DATA TYPES AND PREDICATES - OUTPUT SCHEMA
+# region trades
+table = 'trades'
+output_schema.set_data_type(table=table, field='From', **text)
+output_schema.set_data_type(table=table, field='To', **text)
+output_schema.set_data_type(table=table, field='Quantity', **non_negative_float)
+# endregion
+
+# region trades
+table = 'final_position'
+output_schema.set_data_type(table=table, field='Symbol', **text)
+output_schema.set_data_type(table=table, field='Quantity', **non_negative_float)
+# endregion
+
+# region kpis
+table = 'kpis'
+output_schema.set_data_type(table=table, field='KPI', **text)
+output_schema.set_data_type(table=table, field='Value', **float_number)
+# endregion
+
+# endregion
