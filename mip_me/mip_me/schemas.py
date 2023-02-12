@@ -58,8 +58,8 @@ text = {
 # region INPUT SCHEMA
 input_schema = PanDatFactory(
     parameters=[['Name'], ['Value']],
-    rates=[['From', 'To'], ['Exchange Rate', 'Fixed Fee', 'Variable Fee', 'Total Fee']],
-    requirements=[['Symbol'], ['Currency', 'Surplus', 'Requirements', 'Balance']],
+    rates=[['From', 'To', 'Tier ID'], ['Exchange Rate', 'Fixed Fee', 'Tier Start', 'Tier End', 'Variable Fee']],
+    requirements=[['Symbol'], ['Currency', 'Surplus', 'Max Surplus', 'Requirements', 'Balance']],
 )
 # endregion
 
@@ -83,7 +83,7 @@ input_schema.add_parameter(
 output_schema = PanDatFactory(
     trades=[['From', 'To'], ['Quantity']],
     final_position=[['Symbol'], ['Quantity']],
-    kpis=[['KPI'], ['Value']] 
+    kpis=[['KPI'], ['Value']]
 )
 # endregion
 
@@ -92,10 +92,12 @@ output_schema = PanDatFactory(
 table = 'rates'
 input_schema.set_data_type(table=table, field='From', **text)
 input_schema.set_data_type(table=table, field='To', **text)
+input_schema.set_data_type(table=table, field='Tier ID', **positive_integer)
 input_schema.set_data_type(table=table, field='Exchange Rate', **non_negative_float)
 input_schema.set_data_type(table=table, field='Fixed Fee', **non_negative_float)
+input_schema.set_data_type(table=table, field='Tier Start', **non_negative_float)
+input_schema.set_data_type(table=table, field='Tier End', **non_negative_float)
 input_schema.set_data_type(table=table, field='Variable Fee', **non_negative_float)
-input_schema.set_data_type(table=table, field='Total Fee', **non_negative_float)
 # endregion
 
 # region requirements
@@ -103,6 +105,7 @@ table = 'requirements'
 input_schema.set_data_type(table=table, field='Symbol', **text)
 input_schema.set_data_type(table=table, field='Currency', **text)
 input_schema.set_data_type(table=table, field='Surplus', **non_negative_float)
+input_schema.set_data_type(table=table, field='Max Surplus', **non_negative_float, nullable=True)
 input_schema.set_data_type(table=table, field='Requirements', **non_negative_float)
 input_schema.set_data_type(table=table, field='Balance', **float_number)
 # endregion

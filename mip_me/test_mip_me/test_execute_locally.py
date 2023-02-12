@@ -18,6 +18,7 @@ class TestLocalExecution(unittest.TestCase):
 
     def test_3_main_solve(self):
         dat = utils.read_data('inputs', mip_me.input_schema)
+        utils.check_data(dat, mip_me.input_schema)
         sln = mip_me.solve(dat)
         utils.write_data(sln, 'outputs', mip_me.output_schema)
 
