@@ -8,14 +8,6 @@ import global_exchange
 
 class TestLocalExecution(unittest.TestCase):
 
-    # def test_action_data_prep(self):
-    #     path_data = Path(__file__).parent / 'data' / 'raw_data'
-    #     conv_path = path_data / 'conversion_table.csv'
-    #     reqs_path = path_data / 'requirements.csv'
-    #     dat = global_exchange.preprocess_data(conv_path=conv_path, reqs_path=reqs_path)
-    #     utils.check_data(dat, global_exchange.input_schema)
-    #     utils.write_data(dat, 'inputs', global_exchange.input_schema)
-
     def test_2_main_solve(self):
         dat = utils.read_data('inputs', global_exchange.input_schema)
         utils.check_data(dat, global_exchange.input_schema)
