@@ -1,6 +1,6 @@
-# GlobalExchange Co.
+# GlobalExchange
 
-GlobalExchange Co. is a global company that operates in Europe, South America, North America, and Asia. Due to the nature of the company's operations, at the end of each month, the firm needs to transfer money to cover its cash requirements, maybe to pay its employees or suppliers on different countries.
+GlobalExchange is a global company that operates in Europe, South America, North America, and Asia. Due to the nature of the company's operations, at the end of each month, the firm needs to transfer money to cover its cash requirements, maybe to pay its employees, pay its suppliers in different countries or balance its accounts.
 For this month, the company ended up with five currency requirements: USD, GBP, EUR, CNY, and BRL.
 
 The cash requirements **in millions** of monetary units can be found in the table below:
@@ -25,7 +25,7 @@ To do this transfer, the company works with a bank. The currency exchange rates 
 |  CNY   | 6.78293  | 8.38067 | 7.34219  |    1     | 1.30038  |
 |  BRL   | 5.20774  | 6.43826 | 5.64662  | 0.769005 |    1     |
 
-On top of that, the bank charges two fees: one "_national_" and one "_international_". On the other hand, depending on the values that are being traded, the bank can give a discount over the international fee. For example, for the Brazilian Real the bank offers the following fee table:
+For each operation, the bank charges two fees: one "_national_" and one "_international_". On the other hand, depending on the amount being traded, the bank gives a discount over the international fee. For example, for the Brazilian Real the bank offers the following fee table:
 
 | From | To  | Tier ID | Exchange Rate | National Fee | Tier Start | Tier End | International Fee |
 | :--: | :-: | :-----: | :-----------: | :----------: | :--------: | :------: | :---------------: |
@@ -40,14 +40,21 @@ On top of that, the bank charges two fees: one "_national_" and one "_internatio
 
 So, if GlobalExchange decided to exchange 2 Million BRL for CNY it would receive
 
-$$2 * 1.30038 * (1-0.014 - 0.012) = 2.533 \, \text{Million CNY}$$.
+$$2 \cdot 1.30038 \cdot (1-0.014 - 0.012) = 2.533 \text{Million CNY}.$$
 
 On the other hand, if it chooses to exchange 4 Million BRL for CNY it would receive
 
-$$4 * 1.30038 * (1-0.014 - 0.007) = 5.0922 \, \text{Million CNY}$$
+$$4 \cdot 1.30038 \cdot (1-0.014 - 0.007) = 5.0922 \text{Million CNY}$$
 
-How can GlobalEx satisfy the requirements for the month minimizing the amount paid in fees?
+How can GlobalExchange satisfy the requirements for the next month minimizing the amount paid in fees?
 
 ## Formulation
 
 See our proposed formulation in the [global_exchange_formulation.ipynb](docs/global-exchange_formulation.ipynb) Jupyter Notebook.
+
+### Additional Complexities
+
+The real scenario can have numerous complexities that can be added to the model as additional rules.
+
+- What if the company works with 20 currencies instead of 5?
+- The company could use different banks instead of only one, and choose to trade different pairs between different banks.

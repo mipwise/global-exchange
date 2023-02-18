@@ -1,4 +1,4 @@
-__version__ = "0.1.0"
+__version__ = "1.0.0"
 from global_exchange.schemas import input_schema, output_schema
 from global_exchange.action_preprocess_data import preprocess_data
 from global_exchange.main import solve
