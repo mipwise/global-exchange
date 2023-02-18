@@ -1,18 +1,21 @@
-# GlobalEx Co.
+# GlobalExchange Co.
 
-GlobalEx Co. is a global company that operates in Europe, South America, North America, and Asia. Due to the nature of the company's operations, at the end of each month, the firm needs to transfer money to cover its cash requirements.
+GlobalExchange Co. is a global company that operates in Europe, South America, North America, and Asia. Due to the nature of the company's operations, at the end of each month, the firm needs to transfer money to cover its cash requirements, maybe to pay its employees or suppliers on different countries.
+For this month, the company ended up with five currency requirements: USD, GBP, EUR, CNY, and BRL.
 
-The cash requirements in millions of monetary units can be found in the table below:
+The cash requirements **in millions** of monetary units can be found in the table below:
 
-| Symbol |       Currency        | Surplus | Requirements |
-| :----: | :-------------------: | :-----: | :----------: |
-|  BRL   |    Brazilian Real     |   8.5   |     0.0      |
-|  CNY   | Chinese Yuan Renminbi |  23.0   |     0.0      |
-|  EUR   |         Euro          |   6.8   |     0.0      |
-|  GBP   |         Pound         |   0.0   |     2.1      |
-|  USD   |       US Dollar       |   0.0   |     5.0      |
+| Symbol |       Currency        | Surplus | Max Surplus | Requirements | Balance |
+| :----: | :-------------------: | :-----: | :---------: | :----------: | :-----: |
+|  BRL   |    Brazilian Real     |   8.5   |      6      |     1.3      |   7.2   |
+|  CNY   | Chinese Yuan Renminbi |  23.5   |    15.5     |      3       |  20.5   |
+|  EUR   |         Euro          |   6.8   |     30      |     0.7      |   6.1   |
+|  GBP   |         Pound         |    0    |    10.5     |     2.1      |  -2.1   |
+|  USD   |       US Dollar       |    0    |     200     |      5       |   -5    |
 
-The currency exchange rates offered by the bank GlobalEx works are given below:
+For example, in order to satisfy the requirement of 2.1 million Pounds, GlobalEx could use one of the currencies in which it has a surplus, namely BRL, CNY, or EUR. More than that, it could choose to exchange between any of the currencies to then satisfy the requirements.
+
+To do this transfer, the company works with a bank. The currency exchange rates offered by the bank GlobalEx works are given below:
 
 | Symbol |   USD    |   GBP   |   EUR    |   CNY    |   BRL    |
 | :----: | :------: | :-----: | :------: | :------: | :------: |
@@ -22,43 +25,29 @@ The currency exchange rates offered by the bank GlobalEx works are given below:
 |  CNY   | 6.78293  | 8.38067 | 7.34219  |    1     | 1.30038  |
 |  BRL   | 5.20774  | 6.43826 | 5.64662  | 0.769005 |    1     |
 
-For this month, the company ended up with five currencies: USD, GBP, EUR, CNY, and BRL.
+On top of that, the bank charges two fees: one "_national_" and one "_international_". On the other hand, depending on the values that are being traded, the bank can give a discount over the international fee. For example, for the Brazilian Real the bank offers the following fee table:
 
-For example, in order to satisfy the requirement of 2.1 million Pounds, GlobalEx could use one of the currencies in which it has a surplus, namely BRL, CNY, or EUR. More than that, it could choose to exchange between any of the currencies for then satisfy the requirements.
+| From | To  | Tier ID | Exchange Rate | National Fee | Tier Start | Tier End | International Fee |
+| :--: | :-: | :-----: | :-----------: | :----------: | :--------: | :------: | :---------------: |
+| BRL  | CNY |    1    |    1.30038    |    0.014     |     0      |    4     |       0.012       |
+| BRL  | CNY |    2    |    1.30038    |    0.014     |     4      |   750    |       0.007       |
+| BRL  | EUR |    1    |   0.177097    |    0.014     |     0      |    4     |       0.02        |
+| BRL  | EUR |    2    |   0.177097    |    0.014     |     4      |   750    |       0.015       |
+| BRL  | GBP |    1    |   0.155225    |    0.014     |     0      |    4     |       0.025       |
+| BRL  | GBP |    2    |   0.155225    |    0.014     |     4      |   750    |       0.02        |
+| BRL  | USD |    1    |   0.192022    |    0.014     |     0      |    4     |       0.018       |
+| BRL  | USD |    2    |   0.192022    |    0.014     |     4      |   750    |       0.013       |
 
-On top of the exchange rate, the bank charges different fees for different pairs of currencies:
+So, if GlobalExchange decided to exchange 2 Million BRL for CNY it would receive
 
-| From | To  | Exchange Rate | Fixed Fee | Variable Fee Tier 1 | Amount Tier 2 (Millions) | Variable Fee Tier 2 |
-| :--: | :-: | :-----------: | :-------: | :-----------------: | :----------------------: | :-----------------: |
-| BRL  | BRL |       1       |     0     |          0          |            0             |          0          |
-| BRL  | CNY |    1.30038    |   0.014   |        0.012        |            4             |        0.007        |
-| BRL  | EUR |   0.177097    |   0.014   |        0.02         |            4             |        0.015        |
-| BRL  | GBP |   0.155225    |   0.014   |        0.025        |            4             |        0.02         |
-| BRL  | USD |   0.192022    |   0.014   |        0.018        |            4             |        0.013        |
-| CNY  | BRL |   0.769005    |   0.015   |        0.012        |            5             |        0.007        |
-| CNY  | CNY |       1       |     0     |          0          |            0             |          0          |
-| CNY  | EUR |   0.136199    |   0.015   |        0.021        |            5             |        0.016        |
-| CNY  | GBP |   0.119322    |   0.015   |        0.025        |            5             |        0.02         |
-| CNY  | USD |   0.147429    |   0.015   |        0.017        |            5             |        0.012        |
-| EUR  | BRL |    5.64662    |   0.011   |        0.02         |           1.5            |        0.015        |
-| EUR  | CNY |    7.34219    |   0.011   |        0.021        |           1.5            |        0.016        |
-| EUR  | EUR |       1       |     0     |          0          |            0             |          0          |
-| EUR  | GBP |   0.876083    |   0.011   |        0.012        |           1.5            |        0.007        |
-| EUR  | USD |    1.08251    |   0.011   |        0.015        |           1.5            |        0.01         |
-| GBP  | BRL |    6.43826    |   0.01    |        0.025        |            1             |        0.02         |
-| GBP  | CNY |    8.38067    |   0.01    |        0.025        |            1             |        0.02         |
-| GBP  | EUR |    1.14149    |   0.01    |        0.012        |            1             |        0.007        |
-| GBP  | GBP |       1       |     0     |          0          |            0             |          0          |
-| GBP  | USD |    1.23561    |   0.01    |        0.014        |            1             |        0.01         |
-| USD  | BRL |    5.20774    |   0.013   |        0.018        |            2             |        0.013        |
-| USD  | CNY |    6.78293    |   0.013   |        0.017        |            2             |        0.012        |
-| USD  | EUR |   0.923776    |   0.013   |        0.015        |            2             |        0.01         |
-| USD  | GBP |   0.809242    |   0.013   |        0.014        |            2             |        0.01         |
-| USD  | USD |       1       |     0     |          0          |            0             |          0          |
+$$2 * 1.30038 * (1-0.014 - 0.012) = 2.533 \, \text{Million CNY}$$.
 
-So, if GlobalEx decided to exchange 1 EUR per BRL it would receive $1 * 5.64662 * (1-0.007) = 5.60709 \, \text{BRL}$.
+On the other hand, if it chooses to exchange 4 Million BRL for CNY it would receive
+
+$$4 * 1.30038 * (1-0.014 - 0.007) = 5.0922 \, \text{Million CNY}$$
+
 How can GlobalEx satisfy the requirements for the month minimizing the amount paid in fees?
 
 ## Formulation
 
-Se our proposed formulation in the [globalex.ipynb](docs/globalex.ipynb) Jupyter Notebook.
+See our proposed formulation in the [global_exchange_formulation.ipynb](docs/global-exchange_formulation.ipynb) Jupyter Notebook.

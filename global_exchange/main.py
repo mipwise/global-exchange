@@ -1,27 +1,11 @@
-
 from itertools import product
-from pathlib import Path
 
 # import numpy as np
 import pandas as pd
 import pulp
 from pulp import lpSum
 
-from mip_me.schemas import input_schema, output_schema
-
-
-# read the data
-def get_rate(rates, c_from: str, c_to: str):
-    rate = rates.loc[
-            (rates['From'] == c_from) &
-            (rates['To'] == c_to), 'Exchange Rate'].iloc[0]
-    return rate
-
-
-def fee(rates, c_from: str, c_to: str):
-    fee = rates.loc[(rates['From'] == c_from) &
-                     (rates['To'] == c_to), 'Total Fee'].iloc[0] 
-    return fee
+from global_exchange.schemas import input_schema, output_schema
 
 
 def get_optimization_data(dat):
@@ -129,7 +113,7 @@ def solve(dat):
     if status == 'Optimal':
         x_sol = [(*key, x_var.value()) for key, x_var in x.items() if x_var.value() >= 0.0001]
         sln.trades = pd.DataFrame(x_sol, columns=['From', 'To', 'Quantity'])
-        sln.kpis = pd.DataFrame({'KPI': ['Total Fee ($k)'], 'Value': [mdl.objective.value() * 1000]})
+        sln.kpis = pd.DataFrame({'KPI': ['Total Fee ($k)'], 'Value': [f'{mdl.objective.value() * 1000:.2f}']})
         sln.final_position = pd.DataFrame(columns=['Symbol', 'Quantity'])
         for symb in I:
             new_row = pd.DataFrame({'Symbol': [symb], 'Quantity': [lpSum((x[other, symb].value() - y[other, symb].value()) * r[other, symb] - x[symb, other].value()

@@ -1,6 +1,6 @@
 import pandas as pd
 from pathlib import Path
-from mip_me.schemas import input_schema
+from global_exchange.schemas import input_schema
 
 
 def preprocess_data(conv_path: Path, reqs_path: Path) -> input_schema.PanDat:
