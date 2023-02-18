@@ -1,4 +1,4 @@
-From,To,Tier ID,Exchange Rate,Fixed Fee,Tier Start,Tier End,Variable Fee
+From,To,Tier ID,Exchange Rate,National Fee,Tier Start,Tier End,International Fee
 BRL,CNY,1,1.30038,0.014,0,4,0.012
 BRL,CNY,2,1.30038,0.014,4,750,0.007
 BRL,EUR,1,0.177097,0.014,0,4,0.02
