@@ -116,8 +116,9 @@ def solve(dat):
         sln.kpis = pd.DataFrame({'KPI': ['Total Fee ($k)'], 'Value': [f'{mdl.objective.value() * 1000:.2f}']})
         sln.final_position = pd.DataFrame(columns=['Symbol', 'Quantity'])
         for symb in I:
-            new_row = pd.DataFrame({'Symbol': [symb], 'Quantity': [lpSum((x[other, symb].value() - y[other, symb].value()) * r[other, symb] - x[symb, other].value()
-                                                                   for other in (set(I) - {symb})) + b[symb]]})
+            quantity = round((lpSum((x[other, symb].value() - y[other, symb].value()) * r[other, symb] - x[symb, other].value()
+                                                                   for other in (set(I) - {symb})) + b[symb]).value(), 3) 
+            new_row = pd.DataFrame({'Symbol': [symb], 'Quantity': [quantity] })
             sln.final_position = pd.concat([sln.final_position, new_row], ignore_index=True)
     
     else:
