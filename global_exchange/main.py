@@ -13,7 +13,7 @@ def get_optimization_data(dat):
     idxs = dat.requirements['Symbol'].unique()
     I = [*idxs]
     K = dict()
-    for (i, j), group_df in dat.rates[['From', 'To', 'Tier ID']].groupby(['From', 'To']):
+    for (i, j), group_df in dat.rates[['From Currency', 'To Currency', 'Tier ID']].groupby(['From Currency', 'To Currency']):
         list_of_tiers_ids = sorted(list(set(group_df['Tier ID'])))
         # assert 0 is not a Tier ID
         assert 0 not in list_of_tiers_ids, \
@@ -31,24 +31,24 @@ def get_optimization_data(dat):
     # w_keys are triples (i, j, k) where k are the breakpoints of the tiers [include 0]
     w_keys = [(i, j, k) for i, j in x_keys for k in K[i, j]]
     # bx: are the x value of the brakpoints (amount to be traded), of the form {('From', 'To', "Tier ID"): bx}
-    bx = dict(zip(zip(dat.rates['From'], dat.rates['To'], dat.rates['Tier ID']), dat.rates['Tier End']))
+    bx = dict(zip(zip(dat.rates['From Currency'], dat.rates['To Currency'], dat.rates['Tier ID']), dat.rates['Tier End']))
     bx.update({(i, j, 0): 0 for i, j in x_keys})
 
     # create a dictionary: {'From', 'To', 'Tier ID'): by_accumulated_fee}
     fee_tiers_df = dat.rates.copy()
     fee_tiers_df['Difference Tier End'] = fee_tiers_df['Tier End'] - fee_tiers_df['Tier Start']
     fee_tiers_df['Fee in Each Tier'] = fee_tiers_df['International Fee'] * fee_tiers_df['Difference Tier End']
-    fee_tiers_df['Cumulative Fee'] = fee_tiers_df.groupby(['From', 'To'])['Fee in Each Tier'].cumsum()
+    fee_tiers_df['Cumulative Fee'] = fee_tiers_df.groupby(['From Currency', 'To Currency'])['Fee in Each Tier'].cumsum()
     by = dict(zip(
-        zip(fee_tiers_df['From'], fee_tiers_df['To'], fee_tiers_df['Tier ID']),
+        zip(fee_tiers_df['From Currency'], fee_tiers_df['To Currency'], fee_tiers_df['Tier ID']),
         fee_tiers_df['Cumulative Fee']
     ))
     by.update({(i, j, 0): 0 for i, j in y_keys})
     # create dictionary of the fixed fees: {('From', 'To'): fee}
-    f = dict(zip(zip(dat.rates['From'], dat.rates['To']),
+    f = dict(zip(zip(dat.rates['From Currency'], dat.rates['To Currency']),
                  dat.rates['National Fee']))
     # create dictionary of exchange rates
-    r = dict(zip(zip(dat.rates['From'], dat.rates['To']),
+    r = dict(zip(zip(dat.rates['From Currency'], dat.rates['To Currency']),
                  dat.rates['Exchange Rate']))
 
     return I, K, bx, by, b, dl, du, f, r, x_keys, y_keys, z_keys, w_keys
@@ -112,7 +112,7 @@ def solve(dat):
     sln = output_schema.PanDat()
     if status == 'Optimal':
         x_sol = [(*key, x_var.value()) for key, x_var in x.items() if x_var.value() >= 0.0001]
-        sln.trades = pd.DataFrame(x_sol, columns=['From', 'To', 'Quantity'])
+        sln.trades = pd.DataFrame(x_sol, columns=['From Currency', 'To Currency', 'Quantity'])
         sln.kpis = pd.DataFrame({'KPI': ['Total Fee ($k)'], 'Value': [f'{mdl.objective.value() * 1000:.2f}']})
         sln.final_position = pd.DataFrame(columns=['Symbol', 'Quantity'])
         for symb in I:

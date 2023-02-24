@@ -58,7 +58,7 @@ text = {
 # region INPUT SCHEMA
 input_schema = PanDatFactory(
     parameters=[['Name'], ['Value']],
-    rates=[['From', 'To', 'Tier ID'], ['Exchange Rate', 'National Fee', 'Tier Start', 'Tier End', 'International Fee']],
+    rates=[['From Currency', 'To Currency', 'Tier ID'], ['Exchange Rate', 'National Fee', 'Tier Start', 'Tier End', 'International Fee']],
     requirements=[['Symbol'], ['Currency', 'Surplus', 'Max Surplus', 'Requirements', 'Balance']],
 )
 # endregion
@@ -81,7 +81,7 @@ input_schema.add_parameter(
 
 # region OUTPUT SCHEMA
 output_schema = PanDatFactory(
-    trades=[['From', 'To'], ['Quantity']],
+    trades=[['From Currency', 'To Currency'], ['Quantity']],
     final_position=[['Symbol'], ['Quantity']],
     kpis=[['KPI'], ['Value']]
 )
@@ -90,8 +90,8 @@ output_schema = PanDatFactory(
 # region DATA TYPES AND PREDICATES - INPUT SCHEMA
 # region rates
 table = 'rates'
-input_schema.set_data_type(table=table, field='From', **text)
-input_schema.set_data_type(table=table, field='To', **text)
+input_schema.set_data_type(table=table, field='From Currency', **text)
+input_schema.set_data_type(table=table, field='To Currency', **text)
 input_schema.set_data_type(table=table, field='Tier ID', **positive_integer)
 input_schema.set_data_type(table=table, field='Exchange Rate', **non_negative_float)
 input_schema.set_data_type(table=table, field='National Fee', **non_negative_float)
@@ -115,8 +115,8 @@ input_schema.set_data_type(table=table, field='Balance', **float_number)
 # region DATA TYPES AND PREDICATES - OUTPUT SCHEMA
 # region trades
 table = 'trades'
-output_schema.set_data_type(table=table, field='From', **text)
-output_schema.set_data_type(table=table, field='To', **text)
+output_schema.set_data_type(table=table, field='From Currency', **text)
+output_schema.set_data_type(table=table, field='To Currency', **text)
 output_schema.set_data_type(table=table, field='Quantity', **non_negative_float)
 # endregion
 
