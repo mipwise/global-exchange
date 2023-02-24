@@ -9,7 +9,7 @@ import global_exchange
 class TestLocalExecution(unittest.TestCase):
 
     def test_2_main_solve(self):
-        dat = utils.read_data('inputs', global_exchange.input_schema)
+        dat = utils.read_data('testing_data/testing_data.json', global_exchange.input_schema)
         utils.check_data(dat, global_exchange.input_schema)
         sln = global_exchange.solve(dat)
         utils.write_data(sln, 'outputs', global_exchange.output_schema)
