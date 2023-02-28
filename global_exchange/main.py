@@ -21,7 +21,7 @@ def get_optimization_data(dat):
         # the list of breakpoints includes the 0
         K[i, j] = [0] + list_of_tiers_ids
     du = dict(zip(dat.requirements['Symbol'], dat.requirements['Max Surplus']))
-    b = dict(zip(dat.requirements['Symbol'], dat.requirements['Surplus']))
+    b = dict(zip(dat.requirements['Symbol'], dat.requirements['Total Available']))
     dl = dict(zip(dat.requirements['Symbol'], dat.requirements['Requirements']))
     # the x and y keys are the pairs to be traded
     x_keys = [(i, j) for (i, j) in [*product(I, repeat=2)] if i != j]
@@ -77,10 +77,15 @@ def solve(dat):
     for i, j in y_keys:
         mdl.addConstraint(y[i, j] == x[i, j] * f[i, j] + lpSum(by[i, j, k] * w[i, j, k] for k in K[i, j]), name=f'C2_{i}_{j}')
 
+    currency_flow = {
+        i: lpSum((x[j, i] - y[j, i]) * r[j, i] for j in (set(I) - {i})) - lpSum(x[i, j] for j in (set(I) - {i})) + b[i]
+        for i in I                         
+    }
+
     # C3) Flow of traded currencies must satisfy the demands of currency i
     for i in I:
         mdl.addConstraint(
-            lpSum((x[j, i] - y[j, i]) * r[j, i] for j in (set(I) - {i})) - lpSum(x[i, j] for j in (set(I) - {i})) + b[i] >= dl[i],
+            currency_flow[i] >= dl[i],
             name=f'C3_{i}'
         )
 
@@ -88,7 +93,7 @@ def solve(dat):
     # for i in (set(I) - {'USD'}):
     for i in I:
         mdl.addConstraint(
-            lpSum((x[j, i] - y[j, i]) * r[j, i] for j in (set(I) - {i})) - lpSum(x[i, j] for j in (set(I) - {i})) + b[i] <= du[i],
+            currency_flow[i] <= du[i],
             name=f'C4_{i}'
         )
     
@@ -113,12 +118,13 @@ def solve(dat):
     if status == 'Optimal':
         x_sol = [(*key, x_var.value()) for key, x_var in x.items() if x_var.value() >= 0.0001]
         sln.trades = pd.DataFrame(x_sol, columns=['From Currency', 'To Currency', 'Quantity'])
+        sln.trades = sln.trades.round({'Quantity': 2})
         sln.kpis = pd.DataFrame({'KPI': ['Total Fee ($k)'], 'Value': [f'{mdl.objective.value() * 1000:.2f}']})
         sln.final_position = pd.DataFrame(columns=['Symbol', 'Quantity'])
-        for symb in I:
-            quantity = '{:.2f}'.format(round((lpSum((x[other, symb].value() - y[other, symb].value()) * r[other, symb] - x[symb, other].value()
-                                                                   for other in (set(I) - {symb})) + b[symb]).value(), 3)) 
-            new_row = pd.DataFrame({'Symbol': [symb], 'Quantity': [quantity] })
+
+        for i in I:
+            quantity = '{:.2f}'.format(round(currency_flow[i].value(), 3)) 
+            new_row = pd.DataFrame({'Symbol': [i], 'Quantity': [quantity]})
             sln.final_position = pd.concat([sln.final_position, new_row], ignore_index=True)
     
     else:
