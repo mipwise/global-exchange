@@ -5,17 +5,17 @@ For this month, the company ended up with five currency requirements: USD, GBP, 
 
 The cash requirements **in millions** of monetary units can be found in the table below:
 
-| Symbol |       Currency        | Surplus | Max Surplus | Requirements | Balance |
-| :----: | :-------------------: | :-----: | :---------: | :----------: | :-----: |
-|  BRL   |    Brazilian Real     |   8.5   |      6      |     1.3      |   7.2   |
-|  CNY   | Chinese Yuan Renminbi |  23.5   |    15.5     |      3       |  20.5   |
-|  EUR   |         Euro          |   6.8   |     30      |     0.7      |   6.1   |
-|  GBP   |         Pound         |    0    |    10.5     |     2.1      |  -2.1   |
-|  USD   |       US Dollar       |    0    |     200     |      5       |   -5    |
+| Symbol |       Currency        | Total Available | Requirements | Max Surplus | Balance |
+| :----: | :-------------------: | :-------------: | :----------: | :---------: | :-----: |
+|  BRL   |    Brazilian Real     |       8.5       |     1.3      |      6      |   7.2   |
+|  CNY   | Chinese Yuan Renminbi |      23.5       |      3       |    15.5     |  20.5   |
+|  EUR   |         Euro          |       6.8       |     0.7      |     30      |   6.1   |
+|  GBP   |         Pound         |        0        |     2.1      |    10.5     |  -2.1   |
+|  USD   |       US Dollar       |        0        |      5       |     200     |   -5    |
 
-For example, in order to satisfy the requirement of 2.1 million Pounds, GlobalEx could use one of the currencies in which it has a surplus, namely BRL, CNY, or EUR. More than that, it could choose to exchange between any of the currencies to then satisfy the requirements.
+For example, in order to satisfy the requirement of 2.1 million Pounds, GlobalExchange could use one of the currencies in which it has a surplus, namely BRL, CNY, or EUR. More than that, it could choose to exchange between any of the currencies to then satisfy the requirements.
 
-To do this transfer, the company works with a bank. The currency exchange rates offered by the bank GlobalEx works are given below:
+To do this transfer, the company works with a bank. The currency exchange rates offered by the bank GlobalExchange works are given below:
 
 | Symbol |   USD    |   GBP   |   EUR    |   CNY    |   BRL    |
 | :----: | :------: | :-----: | :------: | :------: | :------: |
@@ -25,7 +25,7 @@ To do this transfer, the company works with a bank. The currency exchange rates 
 |  CNY   | 6.78293  | 8.38067 | 7.34219  |    1     | 1.30038  |
 |  BRL   | 5.20774  | 6.43826 | 5.64662  | 0.769005 |    1     |
 
-For each operation, the bank charges two fees: one "_national_" and one "_international_". On the other hand, depending on the amount being traded, the bank gives a discount over the international fee. For example, for the Brazilian Real the bank offers the following fee table:
+For each operation, the bank charges two fees: one "_national_" (based on the base currency) and one "_international_" (based on the pair being traded). On the other hand, depending on the amount being traded, the bank gives a discount over the international fee. For example, for the Brazilian Real the bank offers the following fee table:
 
 | From | To  | Tier ID | Exchange Rate | National Fee | Tier Start | Tier End | International Fee |
 | :--: | :-: | :-----: | :-----------: | :----------: | :--------: | :------: | :---------------: |
